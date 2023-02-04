@@ -1,0 +1,375 @@
+﻿@page "/inventory"
+
+
+<style>
+    h1.navbar-brand {
+        font-size: 30px;
+    }
+</style>
+
+<nav class="navbar navbar-light justify-content-between">
+    <h1 class="navbar-brand bg-gradient mb-0 h1 text-primary">Items</h1>
+    <button class="btn btn-primary" type="button" @onclick="OpenAddInventoryDialog">    
+        <span class="oi oi-plus" /> Add         @*add button*@
+    </button>
+</nav>
+<br />
+<div class="d-flex">
+    <input type="search" class="form-control search" placeholder="Search from all items" @oninput="SearchItemName" />       @*search bar*@
+    <a class='btn text-@(_sortBy == "itemName" ? "primary" : "secondary")'>
+    </a>
+</div>
+<br />
+<ul class="nav nav-tabs">
+    <li class="nav-item ">
+        <a class='nav-link btn @(_tabFilter == "All" ? "active" : "")' @onclick='()=>TabFilter("All")'>All</a>
+    </li>
+    <li class="nav-item">
+        <a class='nav-link btn @(_tabFilter == "InStock" ? "active" : "")' @onclick='()=>TabFilter("InStock")'>InStock</a>
+    </li>
+    <li class="nav-item">
+        <a class='nav-link btn @(_tabFilter == "OutOfStock" ? "active" : "")' @onclick='()=>TabFilter("OutOfStock")'>OutOfStock</a>
+    </li>
+</ul>
+
+<table class="table">
+    @*table*@
+    <thead>
+        <tr>
+            @*table header*@
+            <td></td>
+            <td></td>
+            <th>
+                <div class="d-flex">
+                    Inventory
+                    <a class='btn text-@(_sortBy == "itemName" ? "primary" : "secondary")' data-mdb-toggle="tooltip"    
+                       @onclick='()=>SortByHandler("itemName")'>
+                        <span class='oi oi-sort-@(_sortBy == "itemName" ? _sortDirection : "ascending")' />     @*sort button*@
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Quantity        
+                    <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("quantity")'>
+                        <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")' />    @*sort button*@
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Description
+                    <a class='btn text-@(_sortBy == "description" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("description")'>
+                        <span class='oi oi-sort-@(_sortBy == "description" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Created At
+                    <a class='btn text-@(_sortBy == "createdAt" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("createdAt")'>
+                        <span class='oi oi-sort-@(_sortBy == "createdAt" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Action
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            IEnumerable<InventoryItem> inventoryList = _inventoryItem;      @*get inventory list*@
+            if (_sortBy == "itemName")
+            {
+                inventoryList = _sortDirection == "ascending" ? inventoryList.OrderBy(t => t.ItemName) : inventoryList.OrderByDescending(t =>
+                t.ItemName);
+            }
+            else if (_sortBy == "description")
+            {
+                inventoryList = _sortDirection == "ascending" ? inventoryList.OrderBy(t => t.Description) : inventoryList.OrderByDescending(t =>
+                t.Description);
+            }
+            else if (_sortBy == "quantity")
+            {
+                inventoryList = _sortDirection == "ascending" ? inventoryList.OrderBy(t => t.Quantity) : inventoryList.OrderByDescending(t =>
+                t.Quantity);
+            }
+            else if (_sortBy == "createdAt")
+            {
+                inventoryList = _sortDirection == "ascending" ? inventoryList.OrderBy(t => t.CreatedAt) : inventoryList.OrderByDescending(t =>
+                t.CreatedAt);
+            }
+            if (_tabFilter == "InStock")
+            {
+                inventoryList = inventoryList.Where(i => i.Quantity > 0);
+            }
+            else if (_tabFilter == "OutOfStock")
+            {
+                inventoryList = inventoryList.Where(i => i.Quantity < 1);
+            }
+            
+
+  
+
+            foreach (var inventoryItem in inventoryList)        @*loop through inventory list*@
+            {
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class='@(inventoryItem.Quantity==0 ? "text-decoration-line-through" : "")'>@inventoryItem.ItemName</td>
+                    <td>
+                        @{
+                            bool isLowStock = inventoryItem.Quantity > 0 && inventoryItem.Quantity < 10;
+                            bool isOutOfStock = inventoryItem.Quantity < 1;
+                            <p class='small mb-0 @(isLowStock ? "text-warning" : isOutOfStock ? "text-danger" : "")'>
+                                @*check if item is low or out of stock*@
+                                @if (isLowStock || isOutOfStock)
+
+                                {
+                                    <span class="oi oi-warning mr-3" />
+                                }
+
+                            </p>
+                        <p class="small">
+                                @inventoryItem.Quantity     @*display quantity*@
+                        </p>
+                        }
+                    </td>
+                    <td>
+                        <p class="small mb-0">
+                            @inventoryItem.Description
+                        </p>
+                    </td>
+                    <td>
+                        <p class="small mb-0">
+                            @inventoryItem.CreatedAt.ToString("MMM dd, yyyy h:mm tt")       @*display date and time*@
+                        </p>
+                    </td>
+                    <td>
+                        @if (_globalState.CurrentUser != null)
+                        {
+                            <button class="btn btn-outline-secondary" type="button"
+                            @onclick="()=>OpenEditInventoryDialog(inventoryItem)">
+                                <span class="oi oi-pencil" /> Edit
+                            </button>
+                        @if (_globalState.CurrentUser.Role == Role.Admin){
+                            <button class="btn btn-outline-danger" type="button" @onclick="()=>OpenDeleteInventoryDialog(inventoryItem)">       
+                                <span class="oi oi-delete" /> Delete
+                            </button>
+                        }else
+                        {
+                                <span class="alert-warning">You are not authorized to delete</span>    @*if user is not admin, display this*@
+                            
+                        }
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@if (_showEditInventoryDialog)      @*edit inventory dialog*@
+{
+    <ModalDialog Title="@_dialogTitle" OnClose="@OnEditInventoryDialogClose" OkLabel="@_dialogOkLabel">
+        <div class="form-floating mt-1">
+            <input id="itemName" type="text" class="form-control" @bind="_inventoryModel.ItemName" placeholder="Item Name" required />
+            <label for="itemName">Inventory Name</label>
+        </div>
+        <div class="form-floating mt-3">
+            <input id="description" type="text"
+               class="form-control text-left" placeholder="Description" @bind="_inventoryModel.Description" required>
+            <label for="description">Description</label>
+        </div>
+        <div class="form-floating mt-3">
+            <input id="quantity" type="number" min="0"
+               class="form-control text-left" @bind="_inventoryModel.Quantity" placeholder="quantity">
+            <label for="quantity">Quantity</label>
+        </div>
+
+        @if (!string.IsNullOrEmpty(_editInventoryErrorMessage))
+        {
+            <AlertMessage Type="danger" Message="@_editInventoryErrorMessage" />    @*display error message*@
+        }
+
+    </ModalDialog>
+}
+
+
+@if (_showDeleteInventoryDialog)
+{
+    <ModalDialog Title="Delete Inventory" OnClose="@OnDeleteInventoryDialogClose" OkLabel="Confirm">
+        <p>Are you sure you want to delete <strong>@_deleteInventory.ItemName</strong> task?</p>
+        @if (!string.IsNullOrEmpty(_deleteInventoryErrorMessage))
+        {
+            <AlertMessage Type="danger" Message="@_deleteInventoryErrorMessage" />
+        }
+    </ModalDialog>
+}
+@code {
+    [CascadingParameter]    @*get global state*@
+    private GlobalState _globalState { get; set; }
+    private bool _showEditInventoryDialog { get; set; }
+    private bool _showDeleteInventoryDialog { get; set; }
+    private List<InventoryItem> _inventoryItem { get; set; }
+    private InventoryItem _deleteInventory { get; set; }
+    private string _dialogTitle { get; set; }
+    private string _dialogOkLabel { get; set; }
+    private string _editInventoryErrorMessage { get; set; }
+    private string _deleteInventoryErrorMessage { get; set; }
+    private InventoryItem _inventoryModel { get; set; }
+    private string _tabFilter = "All";
+    private string _sortBy = "createdAt";
+    private string _sortDirection = "ascending";
+    private string _path = Utils.GetInventoryFilePath();
+    private bool _isAdd { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        _inventoryItem = InventoryService.GetAll();
+    }
+
+    private void SortByHandler(string sortByName)   @*sort by name, description, quantity, or date*@
+
+    {
+        if (_sortBy == sortByName)
+        {
+            _sortDirection = _sortDirection == "ascending" ? "descending" : "ascending";    @*toggle sort direction*@
+        }
+        else
+        {
+            _sortBy = sortByName;
+            _sortDirection = "ascending";
+        }
+    }
+
+    private void OpenAddInventoryDialog()
+    {
+        _dialogTitle = "Add Inventory";
+        _dialogOkLabel = "Add";
+        _isAdd = true;
+        _editInventoryErrorMessage = "";
+        _inventoryModel = new InventoryItem();
+        _inventoryModel.Id = Guid.Empty;
+        _showEditInventoryDialog = true;
+    }
+
+    private void SearchItemName(ChangeEventArgs e)
+    {
+        var searchTerm = e.Value.ToString();
+        if (!string.IsNullOrEmpty(searchTerm) && searchTerm.Length > 2)
+        {
+            _inventoryItem = InventoryService.GetAll().Where(t =>
+            t.ItemName.ToLower().Contains(searchTerm.ToLower())).ToList();
+        }
+        else
+        {
+            _inventoryItem = InventoryService.GetAll();
+        }
+    }
+
+    private void OpenEditInventoryDialog(InventoryItem editInventory)   
+    {
+        _dialogTitle = "Edit Inventory";
+        _dialogOkLabel = "Save";
+        _editInventoryErrorMessage = "";
+        _inventoryModel = editInventory;
+        _showEditInventoryDialog = true;
+    }
+
+    private void OpenDeleteInventoryDialog(InventoryItem inventoryItem)
+    {
+        _deleteInventory = inventoryItem;
+        _showDeleteInventoryDialog = true;
+    }
+
+    private void OnEditInventoryDialogClose(bool isCancel)  @*edit inventory dialog*@
+    {
+        if (isCancel)
+        {
+            _showEditInventoryDialog = false;
+        }
+        
+        else
+        {
+            try
+            {
+                if (_inventoryModel.ItemName == null || _inventoryModel.Description == null || _inventoryModel.Description == "" || _inventoryModel.ItemName == "")   @*check if name and description are empty*@
+                
+                {
+                    _editInventoryErrorMessage = "Please provide all the informations";
+                }
+               
+                else
+                {
+                    _editInventoryErrorMessage = "";
+                    if (_isAdd == true)
+                    {
+                        if (InventoryService.CheckByName(_inventoryModel.ItemName))
+                        {
+                            _inventoryItem = InventoryService.AddToOld(_globalState.CurrentUser.Id, InventoryService.GetByName(_inventoryModel.ItemName), _inventoryModel.Quantity);
+                        }
+                        else
+                        {
+                            _inventoryItem = InventoryService.Create(_globalState.CurrentUser.Id, _inventoryModel.ItemName, _inventoryModel.Quantity, _inventoryModel.Description);
+                        }
+                        _isAdd = false;
+                    }
+                    else
+                    {
+                        _inventoryItem = InventoryService.Update(_globalState.CurrentUser.Id, _inventoryModel.Id, _inventoryModel.ItemName, _inventoryModel.Quantity, _inventoryModel.Description);   @*update inventory*@
+                    }
+                    _showEditInventoryDialog = false;
+                }
+            }
+            catch (Exception e)
+            {
+                _editInventoryErrorMessage = e.Message;
+            }
+        }
+    }
+    private void UpdateQuantity(ChangeEventArgs e)
+    {
+        var quantity = e.Value.ToString();
+        if (!string.IsNullOrEmpty(quantity))
+        {
+            _inventoryModel.Quantity = int.Parse(quantity);
+        }
+    }
+
+    private void OnDeleteInventoryDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+
+            _showDeleteInventoryDialog = false;
+            _deleteInventory = null;
+        }
+        else
+        {
+            try
+            {
+                _deleteInventoryErrorMessage = "";
+                _inventoryItem = InventoryService.Delete(_deleteInventory.Id);
+                _showDeleteInventoryDialog = false;
+                _deleteInventory = null;
+            }
+            catch (Exception e)
+            {
+                _deleteInventoryErrorMessage = e.Message;
+            }
+        }
+    }
+    private void TabFilter(string status)
+    {
+        _tabFilter = status;
+    }
+
+}

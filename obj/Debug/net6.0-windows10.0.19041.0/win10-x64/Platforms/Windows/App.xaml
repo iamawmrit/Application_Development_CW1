@@ -1,0 +1,9 @@
+﻿<maui:MauiWinUIApplication
+    x:Class="AD_CW1_20048632_Amrit_Adhikari_C2.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:maui="using:Microsoft.Maui"
+    xmlns:local="using:AD_CW1_20048632_Amrit_Adhikari_C2.WinUI">
+
+</maui:MauiWinUIApplication>
+

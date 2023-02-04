@@ -1,0 +1,107 @@
+﻿@page "/login"
+@using AD_CW1_20048632_Amrit_Adhikari_C2.Data;
+@inject NavigationManager NavManager
+
+<style>
+    /* Custume theme styles */
+    body {
+        background-color: #eadbff;
+    }
+
+</style>
+        
+<body class="login-body">   @*design by using internal css*@
+    <div class="login-body">
+        <div class="form-login">
+            <style>
+                div.form-floating {
+                    width: 600px;
+                    height: 50px;
+                    display: block;
+                    margin: auto;
+                }
+
+                button {
+                    width: 600px;
+                    height: 50px;
+                    display: block;
+                    margin: auto;
+                }
+            </style>
+        </div>
+    </div>
+</body>
+
+<div class="login-body">
+    <div class="form-login">
+        <form class="text-center" @onsubmit="LoginHandler"> 
+            <img class="mb-4" src="assets/logo.png" alt="logo" height="111">        @*using logo from assets*@
+            <h1 class="h3 mb-3 fw-normal text-primary">Awmrit Service Centre</h1>   
+            <h1 class="h3 mb-3 fw-normal text-primary">Please Login</h1>
+            @if (_showDefaultCredentials)
+            {
+                <div class="alert alert-info" role="alert">
+                    Username: <strong>@UsersService.SeedUsername</strong><br />
+                    Password: <strong>@UsersService.SeedPassword</strong>
+                </div>
+            }
+
+            <div class="form-floating">
+                <input type="text" class="form-control username" @bind="_username" placeholder="Please enter your Username" />  @*using bootstrap*@
+                <label for="floatingInput" class="text-success">Please enter your Username</label>  @* text field for username*@
+            </div>
+            <br>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control password" @bind="_password" placeholder="Please enter your Password" />
+                <label for="floatingPassword" class="text-success">Please enter your Password</label>   @* text field for password*@
+            </div>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <AlertMessage Type="danger" Message="@_errorMessage" />
+            }
+            <button class="w-60 btn btn-lg btn-primary" type="submit">  
+                <span class="oi oi-account-login"> Login</span> @* login button*@
+            </button>
+        </form>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]    // Cascading parameter
+    private GlobalState _globalState { get; set; }
+    private bool _showDefaultCredentials { get; set; }
+    private string _username { get; set; }
+    private string _password { get; set; }
+    private string _errorMessage = "";
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            var user = UsersService.Login(UsersService.SeedUsername, UsersService.SeedPassword);
+            _showDefaultCredentials = user.HasInitialPassword;
+        }
+        catch { }
+
+        _globalState.CurrentUser = null;
+        _errorMessage = "";
+    }
+
+    private void LoginHandler() 
+    {
+        try
+        {
+            _errorMessage = "";
+            _globalState.CurrentUser = UsersService.Login(_username, _password);    // login method
+            if (_globalState.CurrentUser != null)
+            {
+                NavManager.NavigateTo(_globalState.CurrentUser.HasInitialPassword ? "/change-password" : "/");  @*if user has initial password then navigate to change password page*@
+            }
+        }
+        catch (Exception e)
+        {
+            _errorMessage = e.Message;
+            Console.WriteLine(e);
+        }
+    }
+}

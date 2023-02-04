@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "sPtBa2KoBOyAQWDctsdmdpaNVVKq/tFCfsUht16VjNzEnko7ops7gSZD3eMNqin8LrHySVrHG75dKlhKeA9hIA==",
+  "success": false,
+  "projectFilePath": "C:\\Users\\Awmrit\\source\\repos\\AD_CW1_20048632_Amrit_Adhikari_C2\\AD_CW1_20048632_Amrit_Adhikari_C2\\AD_CW1_20048632_Amrit_Adhikari_C2.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Awmrit\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.19041.28\\microsoft.windows.sdk.net.ref.10.0.19041.28.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1012",
+      "level": "Error",
+      "message": "Platform version is not present for one or more target frameworks, even though they have specified a platform: net6.0-android, net6.0-ios, net6.0-maccatalyst"
+    }
+  ]
+}

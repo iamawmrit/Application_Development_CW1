@@ -1,0 +1,33 @@
+﻿@using AD_CW1_20048632_Amrit_Adhikari_C2.Data;
+@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+
+<div class="page">
+
+    <main>
+        @if (_globalState.CurrentUser != null)
+        {
+            <NavMenu Username="@_globalState.CurrentUser.Username" UserRole="@_globalState.CurrentUser.Role" LogoutHandler="LogoutHandler" />
+        }
+        <article class="content px-4">
+            <CascadingValue Value="@_globalState">
+                @Body
+            </CascadingValue>
+        </article>
+    </main>
+</div>
+
+@code {
+    private GlobalState _globalState = new();
+
+    protected override void OnInitialized()
+    {
+        UsersService.SeedUsers();
+    }
+
+    private void LogoutHandler()
+    {
+        _globalState.CurrentUser = null;
+        NavManager.NavigateTo("/login");  //navigate to login page when sysetm run
+    }
+}

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\AD_CW1_20048632_Amrit_Adhikari_C2.props" />
+</Project>

@@ -1,0 +1,245 @@
+﻿@page "/takeouts"
+@using AD_CW1_20048632_Amrit_Adhikari_C2.Data;
+
+
+<nav class="navbar navbar-light bg-gradient justify-content-between">
+    <h1 class="navbar-brand mb-0 h1">Takeouts</h1>
+    <button class="btn btn-primary" type="button" disabled="@(_globalState.CurrentUser.Role != Role.Admin ? true : false)" @onclick="OpenTakeoutInventoryDialog" >  @*only admin can takeout the items , for normal users this is disibled*@
+        <span class="oi oi-external-link" /> Takeout
+    </button>
+</nav>
+
+<div style=" height: 650px; overflow-x:auto">
+    @*for takeout items table*@
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <div class="d-flex">
+                        Item Name
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex">
+                        Quantity
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex">
+                        Approved By
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex">
+                        Taken By
+                    </div>
+                </th>
+                <th>Takeout Date</th>
+                <th>
+                    <div class="d-flex">
+                        Actions
+                    </div>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if(_globalState != null){
+                    IEnumerable<Takeout> takeoutList = _takeouts;   @*takeout list*@
+                foreach (var takeoutItem in takeoutList)
+                {
+                    {
+                        <tr>
+                            <td>@takeoutItem.Itemname</td>
+                            <td>
+                                <p class="small mb-0">
+                                    @takeoutItem.Quantity
+                                </p>
+                            </td>
+                            <td>
+                                @if (UsersService.GetById(takeoutItem.ApprovedBy) == null)  
+                                {
+                                    <p class="small mb-0">
+                                        unknown
+                                    </p>
+                                }
+                                @if (UsersService.GetById(takeoutItem.ApprovedBy) != null)
+                                {
+                                    <p class="small mb-0">
+                                            @UsersService.GetById(takeoutItem.ApprovedBy).Username  @*get the username of the user who approved the takeout*@
+                                    </p>
+                                }
+                            </td>
+                            <td>
+                                <p class="small mb-0">
+                                        @takeoutItem.TakenBy    @*get the username of the user who took the item*@
+                                </p>
+
+                                
+                            </td>
+                            <td>
+                                <p class="small mb-0">
+                                        @takeoutItem.TakeoutTime.ToString("MMM dd, yyyy h:mm tt")   @*get the time when the item was taken*@
+                                </p>
+                            </td>
+                            <td>
+                                    <button class="btn btn-outline-danger" disabled="@(_globalState.CurrentUser.Role != Role.Admin ? true : false)" type="button" @onclick="()=>OpenDeleteInventoryDialog(takeoutItem)">
+                                        @*only admin can delete the takeout items , for normal users this is disibled*@
+                                    <span class="oi oi-delete" /> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@if (_showTakeoutInventoryDialog)       
+{
+        IEnumerable<InventoryItem> inventories = _inventoryItem;
+        <ModalDialog Title="@_dialogTitle" OnClose="@OnTakeoutInventoryDialogClose" OkLabel="@_dialogOkLabel">      
+        <div class="form-floating">
+            <select name="itemName" id="itemName" @bind="_takeoutModel.Itemname" class="form-control">
+                @foreach (var inventoryitem in inventories)
+                {
+                    <option value="@inventoryitem.ItemName" >@inventoryitem.ItemName</option>
+                }
+            </select>
+            <label for="itemName">Inventory Name</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input id="quantity" type="number" min="0" @bind="_takeoutModel.Quantity" class="form-control text-left" placeholder="quantity">    
+            <label for="quantity">Quantity</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input id="takenBy" type="text" min="0" @bind="_takeoutModel.TakenBy" class="form-control text-left" placeholder="Taken By">    @*taken by is the username of the user who took the item*@
+            <label for="takenBy">Taken By</label>
+        </div>
+        @if (!string.IsNullOrEmpty(_takeoutErrorMessage))
+        {
+            <AlertMessage Type="danger" Message="@_takeoutErrorMessage" />
+        }
+            </ModalDialog>
+}
+@if (_showDeleteTakeoutDialog)  
+{
+    <ModalDialog Title="Delete Takeout" OnClose="@OnDeleteTakeoutDialogClose" OkLabel="Confirm">
+        <p>Are you sure you want to delete <strong>@_deleteTakeout.Itemname</strong> takeout?</p>
+        @if (!string.IsNullOrEmpty(_deleteTakeoutErrorMessage))
+        {
+            <AlertMessage Type="danger" Message="@_deleteTakeoutErrorMessage" />
+        }
+    </ModalDialog>
+}
+
+
+@code {
+    [CascadingParameter]    @*for global state*@
+    private GlobalState _globalState { get; set; }
+    private List<InventoryItem> _inventoryItem { get; set; }
+    private List<Takeout> _takeouts { get; set; }
+    private List<Takeout> _takenBy { get; set; }
+    private bool _showTakeoutInventoryDialog { get; set; }
+    private bool _showDeleteTakeoutDialog { get; set; }
+    private string _dialogTitle { get; set; }
+    private string _dialogOkLabel { get; set; }
+    private string _takeoutErrorMessage { get; set; }
+    private string _deleteTakeoutErrorMessage { get; set; }
+    private Takeout _deleteTakeout { get; set; }
+    private Takeout _takeoutModel { get; set; }
+    private Takeout _takenByModel { get; set; }
+    private DateTime _date = DateTime.Now;
+
+    protected override void OnInitialized()
+    {
+        _inventoryItem = InventoryService.GetAll();
+        _takeouts = TakeoutService.GetAll();
+    }
+
+    private void OpenTakeoutInventoryDialog(){
+        _dialogTitle = "Takeout Inventory";
+        _dialogOkLabel = "Submit";
+        _takeoutErrorMessage = "";
+        _takeoutModel = new Takeout();
+        _showTakeoutInventoryDialog = true;
+    }
+
+    private void OnTakeoutInventoryDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+            _showTakeoutInventoryDialog = false;
+        }
+        else
+        {
+            try
+            {
+                if (_takeoutModel.TakenBy == null || _takeoutModel.TakenBy == "")
+                {   
+                    _takeoutErrorMessage = "Please filled all fields";      @*if the user didn't fill the taken by field*@
+                }
+
+                if (_takeoutModel.Quantity < 1 )
+                {
+                    _takeoutErrorMessage = "Takeout quantity must start from 1";    @*quantity must be greater than 0*@
+                } 
+                
+                else
+                {
+                    _takeoutErrorMessage = "";
+                    if (_takeoutModel.Itemname == null)
+                    {
+                        _takeoutModel.Itemname = _inventoryItem.First().ItemName;
+                    }
+                    _takeouts = TakeoutService.Create(_globalState.CurrentUser.Id, _takeoutModel.Itemname, _takeoutModel.Quantity, _takeoutModel.TakenBy);   @*create the takeout*@
+                    _showTakeoutInventoryDialog = false;
+                } 
+                
+           }
+                
+            catch (Exception e)
+            {
+                _takeoutErrorMessage = e.Message;
+            }
+        }
+    }
+
+
+
+    private void OpenDeleteInventoryDialog(Takeout takeout)
+    {
+        _deleteTakeout = takeout;
+        _showDeleteTakeoutDialog = true;
+    }
+
+    private void OnDeleteTakeoutDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+
+            _showDeleteTakeoutDialog = false;
+            _deleteTakeout = null;
+        }
+        else
+        {
+            try
+            {
+                _deleteTakeoutErrorMessage = "";
+                _takeouts = TakeoutService.Delete(_deleteTakeout.Id);   
+    @*delete the takeout*@
+                _showDeleteTakeoutDialog = false;
+                _deleteTakeout = null;
+            }
+            catch (Exception e)
+            {
+                _deleteTakeoutErrorMessage = e.Message;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,82 @@
+﻿<div class="navbar navbar-dark bg-dark" >
+    <div class="container-fluid d-flex oi-align-center">
+        <a class="navbar-brand" style="font-size:20px;" href="">Awmrit Inventory </a><h4 class="text-light">Welcome <strong>@Username</strong>!</h4>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<style>
+    /* Custume theme styles */
+    body {
+        background-color: #eadbff;
+    }
+
+</style>
+<div class='@(_collapseNavMenu ? "collapse" : "")' @onclick="ToggleNavMenu">
+    <div class="shadow mb-8 ">
+    <nav class="navbar navbar-expand-lg navbar-light justify-content-center" style="background-color:#42c7a4  ; margin-bottom:unset;" >
+            <ul class="navbar-nav ">
+            <li></li>
+            <li class="nav-item px-3" style="border-radius:5.6px;">
+                    <NavLink class="nav-link" href="inventory">
+                                                                        @*Inventory*@
+                    <span class="oi oi-list-rich" />Inventory
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="takeouts">
+                                                                         @*Takeouts page*@        
+                    <span class="oi oi-external-link" />Takeout
+                </NavLink>
+            </li>
+            @if (UserRole == Role.Admin)
+            {
+                <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="users">
+                                                                          @*Users page*@
+                        <span class="oi oi-person" /> Users
+                    </NavLink>
+                </li>
+            }
+            
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="change-password">         @*change password page*@
+                    <span class="oi oi-key" /> Change Password
+                </NavLink>
+            </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="chart">
+                                                                            @*Bar Diagram page*@        
+                        <span class="oi oi-bar-chart" /> Chart
+
+                    </NavLink>
+                </li>
+            <li class="nav-item px-3">
+                    <NavLink class="nav-link text-danger" role="button" @onclick="LogoutHandler">
+                                                                            @*Logout page*@
+                    <span class="oi oi-account-logout" /> Logout
+                </NavLink>
+            </li>
+                </ul>
+</nav>
+</div>
+</div>
+
+@code { 
+    [Parameter]
+    public string Username { get; set; }    //username get and set
+    [Parameter]
+    public Role UserRole { get; set; }      //user role get and set
+    [Parameter]
+    public EventCallback LogoutHandler { get; set; }    //logout event get and set
+
+    private bool _collapseNavMenu { get; set; } = true; //collapse nav menu get and set
+
+    private void ToggleNavMenu()
+    {
+        _collapseNavMenu = !_collapseNavMenu;
+    }
+   
+}

@@ -1,0 +1,64 @@
+﻿@page "/chart"
+
+<h3>Bar Diagram of Takenout Items of inventory</h3>
+<Chart Config="_config"></Chart>
+
+@*This page is for Bar Diagram
+    which shows the data from takeout items
+    *@
+<Chart Config="_config"></Chart>
+@code {
+    private BarConfig _config;
+
+    protected override void OnInitialized()
+    {
+        _config = new BarConfig
+            {
+                Options = new BarOptions
+                {
+                    Responsive = true,
+                    Title = new OptionsTitle
+                    {
+                        Display = true,
+                        Text = "Items Take out"
+                    }
+                }
+            };
+
+        List<Takeout> _items = TakeoutService.GetAll();
+
+        foreach (Takeout inventoryTaken in _items)
+        {
+            string itemName = _config.Data.Labels.FirstOrDefault(x => x == inventoryTaken.Itemname);
+            if (itemName == null)
+            {
+                _config.Data.Labels.Add(inventoryTaken.Itemname);
+
+            }
+        }
+
+        List<int> quantities = new List<int>();
+
+        foreach (string name in _config.Data.Labels)
+        {
+            List<Takeout> items = _items.Where(i => i.Itemname == name).ToList();
+            quantities.Add(items.Sum(q => q.Quantity));
+
+        }
+        int[] datasetsQ = quantities.ToArray();
+
+
+        BarDataset<int> dataset = new BarDataset<int>(datasetsQ)
+            {
+                BackgroundColor = new[]
+                {
+            ColorUtil.ColorHexString(255, 99, 132), // Slice 1 aka "Red"
+            ColorUtil.ColorHexString(255, 205, 86), // Slice 2 aka "Yellow"
+            ColorUtil.ColorHexString(75, 192, 192), // Slice 3 aka "Green"
+            ColorUtil.ColorHexString(54, 162, 235), // Slice 4 aka "Blue"
+        }
+            };
+
+        _config.Data.Datasets.Add(dataset);
+    }
+}

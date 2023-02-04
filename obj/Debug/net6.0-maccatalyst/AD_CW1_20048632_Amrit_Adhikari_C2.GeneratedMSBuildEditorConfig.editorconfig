@@ -1,0 +1,69 @@
+is_global = true
+build_property.TargetFramework = net6.0-maccatalyst
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = AD_CW1_20048632_Amrit_Adhikari_C2
+build_property.RootNamespace = AD_CW1_20048632_Amrit_Adhikari_C2
+build_property.ProjectDir = C:\Users\Awmrit\source\repos\AD_CW1_20048632_Amrit_Adhikari_C2\AD_CW1_20048632_Amrit_Adhikari_C2\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Awmrit\source\repos\AD_CW1_20048632_Amrit_Adhikari_C2\AD_CW1_20048632_Amrit_Adhikari_C2
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Main.razor]
+build_metadata.AdditionalFiles.TargetPath = TWFpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Pages/Inventory.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW52ZW50b3J5LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Pages/TakeOut.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGFrZU91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Pages/Users.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlcnMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Shared/AlertMessage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEFsZXJ0TWVzc2FnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Shared/BarDiagram.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEJhckRpYWdyYW0ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Shared/ModalDialog.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1vZGFsRGlhbG9nLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Pages/ChangePassword.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2hhbmdlUGFzc3dvcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-29et7dz3n5
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-o58yd6bybv
+
+[C:/Users/Awmrit/source/repos/AD_CW1_20048632_Amrit_Adhikari_C2/AD_CW1_20048632_Amrit_Adhikari_C2/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-iugm5667qk
